@@ -2,7 +2,7 @@
   "profiles": {
     "LuoguPaintboardPro": {
       "commandName": "Project",
-      "commandLineArgs": "draw 10 10",
+      "commandLineArgs": "draw 486 156",
       "workingDirectory": "C:\\Users\\xiaog\\source\\repos\\LuoguPaintboardPro\\LuoguPaintboardPro"
     }
   }

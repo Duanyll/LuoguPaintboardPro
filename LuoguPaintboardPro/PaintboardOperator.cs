@@ -38,7 +38,7 @@ namespace LuoguPaintboardPro
                     {
                         int x = sx + j;
                         int y = sy + i;
-                        if (currentBoard[y][x] != image[i, j])
+                        if (currentBoard[x][y] != image[i, j])
                         {
                             newQueue.Push(new PointToDraw(x, y, CharToColorIndex(image[i, j])));
                         }
@@ -57,6 +57,8 @@ namespace LuoguPaintboardPro
         static readonly TimeSpan CoolDownTime = new TimeSpan(0, 0, 11);
         static readonly TimeSpan NetworkCoolDownTime = new TimeSpan(0, 0, 0, 0, 100);
 
+        public static int TotalPointDrown { get; set; } = 0;
+
         public async Task Work(char[,] image, int w, int h, int sx, int sy)
         {
             Console.WriteLine($"正在开始绘制, 预计用时 {CoolDownTime * (w * h / accountQueue.Count)}");
@@ -65,26 +67,28 @@ namespace LuoguPaintboardPro
                 RefreshPointQueue(image, w, h, sx, sy);
                 if (pointQueue.Count == 0)
                 {
-                    Console.WriteLine("已全部绘制完成, 每隔 5 分钟检测一次破坏情况");
-                    Task.Delay(new TimeSpan(0, 5, 0)).Wait();
+                    Console.WriteLine("已全部绘制完成, 每隔 30 秒检测一次破坏情况");
+                    Task.Delay(new TimeSpan(0, 0, 30)).Wait();
                     continue;
                 }
                 while (pointQueue.Count > 0)
                 {
-                    bool ok = false;
                     var point = pointQueue.Pop();
+                    bool ok;
                     do
                     {
+                        Task.Delay(NetworkCoolDownTime).Wait();
                         var cur = accountQueue.Dequeue();
                         if (DateTime.Now < cur.ReadyTime)
                         {
-                            Task.Delay(cur.ReadyTime - DateTime.Now).Wait();
+                            await Task.Delay(cur.ReadyTime - DateTime.Now);
                         }
                         ok = await cur.Paint(point.X, point.Y, point.Color);
                         cur.ReadyTime += CoolDownTime;
                         accountQueue.Enqueue(cur);
                     } while (!ok);
-                    Task.Delay(NetworkCoolDownTime).Wait();
+                    TotalPointDrown++;
+                    if (TotalPointDrown % 100 == 0) RefreshPointQueue(image, w, h, sx, sy);
                 }
             }
         }
