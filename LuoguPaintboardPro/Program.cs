@@ -61,7 +61,7 @@ namespace LuoguPaintboardPro
                             w = Math.Max(w, image[i].Length);
                         }
                     }
-                    Console.WriteLine($"读取到图片 txt, 宽 {w}, 高 {h}");
+                    Console.WriteLine($"读取到图片 {imageFileArg.Value ?? "data.txt"}, 宽 {w}, 高 {h}");
                     var imageArray = new char[h, w];
                     for (int i = 0; i < h; i++)
                     {

@@ -22,29 +22,39 @@ namespace LuoguPaintboardPro
 
         int CharToColorIndex(char ch)
         {
-            return ch <= '9' ? ch - '0' : ch - 'a';
+            return ch <= '9' ? ch - '0' : ch - 'a' + 10;
         }
 
         void RefreshPointQueue(char[,] image, int w, int h, int sx, int sy)
         {
             Console.WriteLine($"正在刷新画板");
-            pointQueue = new PriorityQueue<PointToDraw>(new PointToDrawComparer());
-            var currentBoard = accountQueue.Peek().GetBoard().Result;
-            for (int i = 0; i < h; i++)
+            try
             {
-                for (int j = 0; j < w; j++)
+                var newQueue = new PriorityQueue<PointToDraw>(new PointToDrawComparer());
+                var currentBoard = accountQueue.Peek().GetBoard().Result;
+                for (int i = 0; i < h; i++)
                 {
-                    int x = sy + i;
-                    int y = sx + j;
-                    if (currentBoard[y][x] != image[i, j])
+                    for (int j = 0; j < w; j++)
                     {
-                        pointQueue.Push(new PointToDraw(x, y, CharToColorIndex(image[i, j])));
+                        int x = sx + j;
+                        int y = sy + i;
+                        if (currentBoard[y][x] != image[i, j])
+                        {
+                            newQueue.Push(new PointToDraw(x, y, CharToColorIndex(image[i, j])));
+                        }
                     }
                 }
+                pointQueue = newQueue;
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine("出现了异常!");
+                Console.WriteLine(ex.Message);
             }
+            
         }
 
-        static readonly TimeSpan CoolDownTime = new TimeSpan(0, 0, 10);
+        static readonly TimeSpan CoolDownTime = new TimeSpan(0, 0, 11);
         static readonly TimeSpan NetworkCoolDownTime = new TimeSpan(0, 0, 0, 0, 100);
 
         public async Task Work(char[,] image, int w, int h, int sx, int sy)
