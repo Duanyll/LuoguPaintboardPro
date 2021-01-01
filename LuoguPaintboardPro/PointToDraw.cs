@@ -26,7 +26,9 @@ namespace LuoguPaintboardPro
     {
         int IComparer<PointToDraw>.Compare(PointToDraw x, PointToDraw y)
         {
+            // NOTE: 在此修改按顺序画还是随机画
             return x.R.CompareTo(y.R);
+            // return x.Y.CompareTo(y.Y) == 0 ? x.X.CompareTo(y.X) : x.Y.CompareTo(y.Y);
         }
     }
 }

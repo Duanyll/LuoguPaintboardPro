@@ -4,6 +4,7 @@ using System.Text;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Numerics;
 
 namespace LuoguPaintboardPro
 {
@@ -25,14 +26,14 @@ namespace LuoguPaintboardPro
             }
         }
 
-        static int getClosestColorIndex(Color color)
+        static int getClosestColorIndex(Vector3 color)
         {
             int result = 0;
-            int resultDis = 0x3f3f3f3f;
+            float resultDis = float.PositiveInfinity;
             for (int i = 0; i < BoardColors.Length; i++)
             {
                 var cur = BoardColors[i];
-                int dis = (cur.R - color.R) * (cur.R - color.R) + (cur.G - color.G) * (cur.G - color.G) + (cur.B - color.B) * (cur.B - color.B);
+                float dis = (cur.R - color.X) * (cur.R - color.X) + (cur.G - color.Y) * (cur.G - color.Y) + (cur.B - color.Z) * (cur.B - color.Z);
                 if (dis < resultDis)
                 {
                     result = i;
@@ -57,13 +58,35 @@ namespace LuoguPaintboardPro
             var result = new char[image.Height, image.Width];
             var preview = new Bitmap(image.Width, image.Height);
 
+            var vecImg = new Vector3[image.Height, image.Width];
+
+            Vector3 colorToVector(Color c) => new Vector3(c.R, c.G, c.B);
+
             for (int x = 0; x < image.Width; x++)
             {
                 for (int y = 0; y < image.Height; y++)
                 {
-                    var color = image.GetPixel(x, y);
-                    result[y, x] = indexToChar(getClosestColorIndex(color));
-                    preview.SetPixel(x, y, BoardColors[getClosestColorIndex(color)]);
+                    vecImg[y, x] = colorToVector(image.GetPixel(x, y));
+                }
+            }
+
+            for (int y = 0; y < image.Height; y++)
+            {
+                for (int x = 0; x < image.Width; x++)
+                {
+                    var color = vecImg[y, x];
+                    var newColorIndex = getClosestColorIndex(color);
+                    result[y, x] = indexToChar(newColorIndex);
+                    preview.SetPixel(x, y, BoardColors[newColorIndex]);
+                    var newColor = colorToVector(BoardColors[newColorIndex]);
+                    var error = color - newColor;
+
+                    if (x < image.Width - 1) vecImg[y, x + 1] += error * 7 / 16;
+                    if (y < image.Height - 1) {
+                        if (x > 0) vecImg[y + 1, x - 1] += error * 3 / 16;
+                        vecImg[y + 1, x] += error * 5 / 16;
+                        if (x < image.Width - 1) vecImg[y + 1, x + 1] += error * 1 / 16;
+                    }
                 }
             }
 

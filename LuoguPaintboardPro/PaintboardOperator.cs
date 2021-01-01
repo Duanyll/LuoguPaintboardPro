@@ -54,8 +54,9 @@ namespace LuoguPaintboardPro
             
         }
 
-        static readonly TimeSpan CoolDownTime = new TimeSpan(0, 0, 11);
+        static readonly TimeSpan CoolDownTime = new TimeSpan(0, 0, 31);
         static readonly TimeSpan NetworkCoolDownTime = new TimeSpan(0, 0, 0, 0, 100);
+        static readonly DateTime FinishTime = new DateTime(2021, 1, 4, 0, 0, 0);
 
         public static int TotalPointDrown { get; set; } = 0;
 
@@ -67,8 +68,16 @@ namespace LuoguPaintboardPro
                 RefreshPointQueue(image, w, h, sx, sy);
                 if (pointQueue.Count == 0)
                 {
-                    Console.WriteLine("已全部绘制完成, 每隔 30 秒检测一次破坏情况");
-                    Task.Delay(new TimeSpan(0, 0, 30)).Wait();
+                    if (FinishTime - DateTime.Now >= new TimeSpan(0, 5, 0))
+                    {
+                        Console.WriteLine("已全部绘制完成, 每隔 30 秒检测一次破坏情况");
+                        Task.Delay(new TimeSpan(0, 0, 30)).Wait();
+                    } 
+                    else
+                    {
+                        Console.WriteLine("最后五分钟, 高密度检测");
+                        Task.Delay(new TimeSpan(0, 0, 1)).Wait();
+                    }
                     continue;
                 }
                 while (pointQueue.Count > 0)
@@ -79,6 +88,11 @@ namespace LuoguPaintboardPro
                     {
                         Task.Delay(NetworkCoolDownTime).Wait();
                         var cur = accountQueue.Dequeue();
+                        if (DateTime.Now > FinishTime)
+                        {
+                            Console.WriteLine("活动已结束.");
+                            return;
+                        }
                         if (DateTime.Now < cur.ReadyTime)
                         {
                             await Task.Delay(cur.ReadyTime - DateTime.Now);
