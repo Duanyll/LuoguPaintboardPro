@@ -1,6 +1,6 @@
 # LuoguPaintboardPro
 
-2021 版洛谷冬日滑板工具, 支持彩色图片, 多账号, 自修复
+2021 版洛谷冬日绘板工具, 支持彩色图片, 多账号, 自修复
 
 使用 .Net Core 打造
 
@@ -32,7 +32,7 @@ dotnet run draw x y
 
 ## cookie 格式
 
-`cookie.txt`
+填入`cookie.txt`
 
 ```
 __client_id=abcdefghijklmnopqrstuvwxyz1234567890abcd; _uid=48256
@@ -85,4 +85,3 @@ Options:
 
 1. 可以多开，只需要多开终端，并且单独指定 `data.txt` 和 `cookie.txt`
 2. 切换按顺序绘制和随机绘制: 修改[此处](https://github.com/Duanyll/LuoguPaintboardPro/blob/ecd0663450c04b868dc98e15e9cfb1eb46ac1d84/LuoguPaintboardPro/PointToDraw.cs#L30)
-3. mac 使用：需要 `brew install mono-libgdiplus`
