@@ -1,6 +1,6 @@
 # LuoguPaintboardPro
 
-2021 版洛谷冬日滑板工具, 支持彩色图片, 多账号, 自修复
+2021 版洛谷冬日画板工具, 支持彩色图片, 多账号, 自修复
 
 使用 .Net Core 打造
 
@@ -32,7 +32,7 @@ dotnet run draw x y
 
 ## cookie 格式
 
-`cookie.txt`
+`cookie.txt` 文件：
 
 ```
 __client_id=abcdefghijklmnopqrstuvwxyz1234567890abcd; _uid=48256
