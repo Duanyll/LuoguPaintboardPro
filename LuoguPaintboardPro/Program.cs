@@ -70,6 +70,10 @@ namespace LuoguPaintboardPro
                             imageArray[i, j] = image[i][j];
                         }
                     }
+                    if (sy + h > 600 || sx + w > 1000) {
+                        Console.WriteLine("坐标超出范围了！");
+                        return 1;
+                    }
                     var opr = new PaintboardOperator(cookie);
                     var task = opr.Work(imageArray, w, h, sx, sy);
                     Console.CancelKeyPress += (s, args) =>

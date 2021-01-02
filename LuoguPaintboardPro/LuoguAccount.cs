@@ -30,7 +30,12 @@ namespace LuoguPaintboardPro
         public async Task<string[]> GetBoard()
         {
             var response = await client.GetAsync("https://www.luogu.com.cn/paintBoard/board");
-            return (await response.Content.ReadAsStringAsync()).Split('\n');
+            if (!response.IsSuccessStatusCode) {
+                throw new Exception($"使用账号 {Uid} 时 Http 状态码异常! 返回状态码: {response.StatusCode}");
+            }
+            var result = (await response.Content.ReadAsStringAsync()).Split('\n');
+            if (result.Length < 2) throw new Exception($"使用账号 {Uid} 时获取画板失败! 返回状态码: {response.StatusCode}");
+            return result;
         }
 
         public async Task<bool> Paint(int x, int y, int color)
