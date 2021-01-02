@@ -37,6 +37,7 @@ namespace LuoguPaintboardPro
                 {
                     for (int j = 0; j < w; j++)
                     {
+                        if (image[i, j] == '_') continue;
                         int x = sx + j;
                         int y = sy + i;
                         if (currentBoard[x][y] != image[i, j])
