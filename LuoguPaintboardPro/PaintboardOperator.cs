@@ -16,8 +16,9 @@ namespace LuoguPaintboardPro
             foreach (var i in cookies)
             {
                 if (string.IsNullOrWhiteSpace(i)) continue;
-                accountQueue.Enqueue(new LuoguAccount(i));
+                accountQueue.Enqueue(new LuoguAccount(i.Trim()));
             }
+            Console.WriteLine($"识别到 {accountQueue.Count} 个 cookie" );
         }
 
         int CharToColorIndex(char ch)

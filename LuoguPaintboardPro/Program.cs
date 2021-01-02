@@ -49,8 +49,8 @@ namespace LuoguPaintboardPro
                 {
                     int sx = int.Parse(sXArg.Value);
                     int sy = int.Parse(sYArg.Value);
-                    var image = File.ReadAllText(imageFileArg.Value ?? "data.txt").Split(Environment.NewLine);
-                    var cookie = File.ReadAllText(cookieFileArg.Value ?? "cookie.txt").Split(Environment.NewLine);
+                    var image = File.ReadAllText(imageFileArg.Value ?? "data.txt").Split('\n');
+                    var cookie = File.ReadAllText(cookieFileArg.Value ?? "cookie.txt").Split('\n');
                     int w = 0, h = 0;
                     for (int i = 0; i < image.Length; i++)
                     {

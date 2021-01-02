@@ -49,7 +49,7 @@ namespace LuoguPaintboardPro
                 {
                     FailureCount++;
                     Console.WriteLine($"使用账号 {Uid} 时 Http 状态码异常! 返回状态码: {response.StatusCode}");
-                    Console.WriteLine(response.Content);
+                    Console.WriteLine(await response.Content.ReadAsStringAsync());
                     return false;
                 }
                 else
